@@ -1,0 +1,25 @@
+#-------------------------------------------------------------------------------
+# Name: recieving emails test
+# Purpose: to explore the reception side of python email libraries
+#
+# Author:      Connor Hamilton
+#
+# Created:     29/08/2018
+# Copyright:   (c) Connor Hamilton 2018
+# Licence:     <your licence>
+#------------------------------------------------------------------------------
+
+import imaplib
+
+server = imaplib.IMAP4_SSL('imap.gmail.com')
+username = "computersciencetest1@gmail.com"
+Password = "Password1@"
+server.login(username,Password)
+
+
+status,count = server.select("Inbox")
+status,data = server.fetch(count[0],"(RFC822)")
+
+print (data[0][1])
+server.close()
+server.logout()
