@@ -1,0 +1,35 @@
+#-------------------------------------------------------------------------------
+# Name: Smtp test file
+# Purpose: to explore the output side of the smtp module
+#
+# Author:      Connor Hamilton
+#
+# Created:     29/08/2018
+# Copyright:   (c) Connor Hamilton 2018
+# Licence:     <your licence>
+#-------------------------------------------------------------------------------
+
+import smtplib
+from email.MIMEMultipart import MIMEMultipart
+from email.MIMEText import MIMEText
+
+def test1():
+    msg = MIMEMultipart()
+    body = "Hello"
+    msg['Subject'] = "Past Paper results from "
+    msg.attach(MIMEText(body, 'plain'))
+    text = msg.as_string()
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.starttls()
+    server.login("ComputerScienceTest1@gmail.com", "Password1@")
+    server.sendmail("ComputerScienceTest1@gmail.com", "ComputerScienceTest1@gmail.com", text)
+    server.quit()
+
+test1()
+
+
+
+
+
+
+
