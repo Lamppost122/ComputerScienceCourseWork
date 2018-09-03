@@ -1,0 +1,477 @@
+#-------------------------------------------------------------------------------
+# Name: Player database
+# Purpose:
+#
+# Author:      Connor Hamilton
+#
+# Created:     31/08/2018
+# Copyright:   (c) Connor Hamilton 2018
+# Licence:     <your licence>
+#-------------------------------------------------------------------------------
+import re
+import datetime
+import io
+import sys
+import os.path
+import smtplib
+from email.MIMEMultipart import MIMEMultipart
+from email.MIMEText import MIMEText
+
+playerDatabase = 'playerDatabase.txt'
+
+
+class player:
+    def __init__(self,playerID,firstName,lastName,Email,phoneNumber,Address,Postcode,dateOfBirth,dateOfJoining):
+        self.playerID = self.getPlayerID()
+        self.firstName = self.getFirstName()
+        self.lastName = self.getLastName()
+        self.Email = self.getEmail()
+        self.phoneNumber = self.getPhoneNumber()
+        self.Address = self.getAddress()
+        self.Postcode = self.getPostcode()
+        self.dateOfBirth = self.getDateOfBirth()
+        self.dateOfJoining = self.getDateOfJoining()
+
+    def getPlayerID(self):
+        self.playerID = sum(1 for line in open("playerDatabase.txt")) + 1
+        self.playerID = "{:05d}".format(self.playerID)
+        self.playerID = str(self.playerID)
+        return self.playerID
+
+
+    def getFirstName(self):
+        self.firstName = raw_input("Players first name: ")
+        if len(self.firstName) > 30 :
+            self.getFirstName()
+        self.firstName = "{:<30}".format(self.firstName)
+        self.firstName.lower()
+        return self.firstName
+
+    def getLastName(self):
+        self.lastName = raw_input("Players last name: ")
+        if len(self.lastName) > 30 :
+            playerDatabase.getLastName()
+        self.lastName = "{:<30}".format(self.lastName)
+        self.lastName.lower()
+        return self.lastName
+
+    def getEmail(self):
+        self.Email = raw_input("Players Email: ")
+        if len(self.Email) > 30:
+            self.getEmail()
+##        if re.match(r"^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$", self.Email) != False:
+##            self.getEmail()
+        self.Email = "{:<30}".format(self.Email)
+        return self.Email
+
+    def getPhoneNumber(self):
+        self.PhoneNumber = raw_input("Players Phone Number: ")
+##        if len(self.PhoneNumber) != 11:
+##            self.getPhoneNumber()
+##        if self.PhoneNumber.isdigit() == False:
+##            self.getPhoneNumber()
+        return self.PhoneNumber
+
+    def getAddress(self):
+        self.Address = raw_input("Players Address: ")
+        if len(self.Address) > 30:
+            self.getAddress()
+        self.Address = "{:<30}".format(self.Address)
+        return self.Address
+
+    def getPostcode(self):
+        self.Postcode = raw_input("Players Postcode: ")
+##        if re.match("^(([gG][iI][rR] {0,}0[aA]{2})|((([a-pr-uwyzA-PR-UWYZ][a-hk-yA-HK-Y]?[0-9][0-9]?)|(([a-pr-uwyzA-PR-UWYZ][0-9][a-hjkstuwA-HJKSTUW])|([a-pr-uwyzA-PR-UWYZ][a-hk-yA-HK-Y][0-9][abehmnprv-yABEHMNPRV-Y]))) {0,}[0-9][abd-hjlnp-uw-zABD-HJLNP-UW-Z]{2}))$)",Postcode) == False:
+##            playerDatabase.getPostcode()
+        self.Postcode.replace(" ","")
+        return self.Postcode
+
+    def getDateOfBirth(self):
+        self.DateOfBirth = raw_input("Players Date Of Birth: ")
+##        try:
+##            datetime.datetime.strptime(inputDob, '%d/%m/%Y')
+##        except ValueError:
+##            playerDatabase.getDateOfBirth()
+        return self.DateOfBirth
+
+    def getDateOfJoining(self):
+        self.DateOfJoining = str(datetime.now())
+        return self.DateOfJoining
+
+
+    def getPlayerData(self):
+        playerData = self.playerID + self.firstName + self.lastName + self.Email+self.phoneNumber+self.Address+self.Postcode+self.dateOfBirth+self.dateOfJoining
+        return playerData
+
+
+class playerDatabase:
+
+    def init__Database():
+        database = open(playerDatabase,'w+')
+        database.close()
+
+    def addPlayer(self):
+        p1 = player("","","","","","","","","")
+        database = open("playerDatabase.txt",'a')
+        database.write(p1.getPlayerData() + "\n")
+        database.close()
+
+    def removePlayer(self):
+        find1 = raw_input("Who would you like to remove ?")
+        lineCount,j = self.search("playerDatabase.txt",find1,"","","player")
+        self.remove("playerDatabase.txt",lineCount)
+
+    def editPlayer(self):
+        find1=raw_input("Who would you like to edit ?")
+        lineCount,searchResult = self.search("playerDatabase.txt",find1,"","","player")
+        playerEdit = searchResult
+        editFeature = raw_input("What would you like to edit ? \nfirstname lastname email phonenumber address postcode dob")
+        if editFeature =="firstname":
+            change = raw_input("What you you like to change the first name to ? ")
+            change = "{:<30}".format(change)
+            playerEdit = playerEdit.replace(str(playerEdit[5:35]),str(change))
+        if editFeature =="lastname":
+            change = raw_input("What you you like to change the last name to ? ")
+            change = "{:<30}".format(change)
+            playerEdit = playerEdit.replace(str(playerEdit[35:65]),str(change))
+        if editFeature =="email":
+            change = raw_input("What you you like to change the email to ? ")
+            change = "{:<30}".format(change)
+            playerEdit = playerEdit.replace(str(playerEdit[65:95]),str(change))
+        if editFeature =="phonenumber":
+            change = raw_input("What you you like to change the phonenumber to ? ")
+            change = "{:<11}".format(change)
+            playerEdit = playerEdit.replace(str(playerEdit[95:106]),str(change))
+        if editFeature =="address":
+            change = raw_input("What you you like to change the address to ? ")
+            change = "{:<30}".format(change)
+            playerEdit = playerEdit.replace(str(playerEdit[106:136]),str(change))
+        if editFeature =="postcode":
+            change = raw_input("What you you like to change the postcode to ? ")
+            change = "{:<8}".format(change)
+            playerEdit = playerEdit.replace(str(playerEdit[136:144]),str(change))
+        if editFeature =="dob":
+            change = raw_input("What you you like to change the date of birth to ? ")
+            playerEdit = playerEdit.replace(str(playerEdit[144:154]),str(change))
+
+        self.remove("playerDatabase.txt",lineCount)
+        database = open("playerDatabase.txt",'a')
+        database.write(playerEdit+"\n")
+        database.close()
+
+        teamNumber = 1
+        while True:
+            if os.path.isfile("team"+str(teamNumber)+".txt") == True:
+
+                searchlines = File.readlines()
+
+                lineCount = 0
+
+                for i, line in enumerate(searchlines):
+                    lineCount +=1
+                    if searchResult == line:
+                        self.remove("team"+str(teamNumber)+".txt",lineCount)
+                        database = open("team"+str(teamNumber)+".txt",'a')
+                        database.write(playerEdit+"\n")
+                        database.close()
+                        break
+                teamNumber += 1
+            else:
+                break
+
+    def remove(self,sourceFile,lineCount):
+
+        File = open(sourceFile,'r')
+        searchlines = File.readlines()
+        Temp = open("ComputerSceinceTemp.txt",'w+')
+        subLineCount =0
+        for j, line in enumerate(searchlines):
+            subLineCount += 1
+            if lineCount != subLineCount:
+                Temp.write(str(line))
+        Temp.close()
+        File = open(sourceFile,'w')
+        Temp = open("ComputerSceinceTemp.txt","r")
+        for line in Temp:
+            File.write(line)
+        Temp.close()
+        File.close()
+        os.remove("ComputerSceinceTemp.txt")
+
+
+    def search(self,sourceFile,find1,find2,find3,searchType):
+        File = open(sourceFile,'r')
+        searchlines = File.readlines()
+        found = []
+        lineCount = 0
+
+        for i, line in enumerate(searchlines):
+            if find1 in line and find2 in line and find3 in line:
+
+                for l in searchlines[i:i+1]:
+                    found.append(l),
+
+        for j in found:
+            lineCount +=1
+
+            Check = raw_input( self.message(j,searchType) ) # will need to change when gui is added
+            if Check =="y":
+                return lineCount,j
+
+    def message(self,j,searchType):
+        if searchType == "player":
+            message = j[5:65].split()
+            message = "Is "+message[0].capitalize() + " "+ message[1].capitalize() +" the Player your looking for ? (y/n)"
+            return message
+        if searchType == "match":
+            message = "Is Whitchurch " + j[7:8]+"'s vs "+j[53:].strip()+" on the "+j[43:53] +" the match your looking for ? (y/n)"
+            return message
+        if searchType == "team":
+            message = j[5:65].split()
+            message ="Is "+ message[0].capitalize() + " "+ message[1].capitalize()+" the Player your looking for ? (y/n)"
+            return message
+        if searchType == "addPlayer":
+            message = j[5:65].split()
+            message ="Is "+ message[0].capitalize() + " "+ message[1].capitalize()+" the Player you want to add ? (y/n)"
+            return message
+
+    def searchByFirstName(self):
+        find1 = raw_input("Search by first name for : ")
+        lineCount,j = self.search('playerDatabase.txt',find1,"","","player")
+        return j
+
+    def searchByLastName(self):
+        find1 = raw_input("Search by last name for : ")
+        lineCount,j = self.search('playerDatabase.txt',find1,"","","player")
+        return j
+
+    def addMatch(self):
+        m1=match("","","","","","")
+        matchFile = open("matchFile.txt",'a+')
+        matchFile.write(m1.getMatchData()+"\n")
+        matchFile.close()
+
+    def removeMatch(self):
+        find1 =raw_input("Who is the opposition ?")
+        find2 = raw_input("What team is playing ?")
+        lineCount,j =self.search(find1,find2,"","match")
+        self.remove("matchFile.txt",lineCount)
+
+    def editMatch(self):
+        find1=raw_input("What match would you like to edit ?")
+        lineCount,playerEdit = self.search("matchFile.txt",find1,"","","match")
+        editFeature = raw_input("What would you like to edit ? \nlocation time day opposition")
+        if editFeature =="location":
+            change = raw_input("What you you like to change the location to ? ")
+            change = "{:<30}".format(change)
+            playerEdit = playerEdit.replace(str(playerEdit[8:38]),str(change))
+        if editFeature =="time":
+            change = raw_input("What you you like to change the time to ? ")
+            playerEdit = playerEdit.replace(str(playerEdit[38:43]),str(change))
+        if editFeature =="day":
+            change = raw_input("What you you like to change the day to ? ")
+            playerEdit = playerEdit.replace(str(playerEdit[43:53]),str(change))
+        if editFeature =="opposition":
+            change = raw_input("What you you like to change the opposition to ? ")
+            change = "{:<30}".format(change)
+            playerEdit = playerEdit.replace(str(playerEdit[53:83]),str(change))
+        self.remove("matchFile.txt",lineCount)
+        database = open("matchFile.txt",'a')
+        database.write(playerEdit)
+        database.close()
+
+
+
+class team(player,playerDatabase):
+    def __init__(self,player1,player2,player3,player4,player5,player6,player7,player8,player9,player10,player11,player12,player13,player14,player15,player16):
+        self.player1 = player
+        self.player2 = player
+        self.player3 = player
+        self.player4 = player
+        self.player5 = player
+        self.player6 = player
+        self.player7 = player
+        self.player8 = player
+        self.player9 = player
+        self.player10 = player
+        self.player11 = player
+        self.player12 = player
+        self.player13 = player
+        self.player14 = player
+        self.player15 = player
+        self.player16 = player
+
+    def createTeam(self):
+        teamNumber = 1
+        while True:
+            if os.path.isfile("team"+str(teamNumber)+".txt") == True:
+                 int(teamNumber)
+                 teamNumber += 1
+            else:
+                break
+        teamFile = open("team"+str(teamNumber)+".txt",'w+')
+        for i in range(16):
+            teamFile.write(str(self.searchByFirstName()))
+        teamFile.close()
+
+    def addPlayerToTeam(self):
+        teamNumber = raw_input("What team do add a player to ?")
+        teamFile = open("team"+str(teamNumber)+".txt",'a+')
+        find1 = raw_input("Search for :")
+        lineCount,j = self.search('playerDatabase.txt',find1,"","","addPlayer")
+        teamFile.write(str(j))
+        teamFile.close()
+
+    def removePlayerFromTeam(self):
+
+        teamNumber = raw_input("What team do you want to edit ?")
+        find1 =raw_input("Who do you want to remove")
+        lineCount = self.search(find1,"","","team")
+        self.remove("team"+str(teamNumber)+".txt",lineCount)
+
+
+    def replacePlayerInTeam(self):
+        teamNumber = raw_input("What team do you want to edit ?")
+        find1 =raw_input("Who do you want to replace?")
+        lineCount = self.search(find1,"","","team")
+        self.remove("team"+str(teamNumber)+".txt",lineCount)
+        teamFile = open("team"+str(teamNumber)+".txt",'a+')
+        find1 = raw_input("Search for :")
+        lineCount,j = self.search('playerDatabase.txt',find1,"","","addPlayer")
+        teamFile.write(str(j))
+        teamFile.close()
+
+
+class match(team):
+    def __init__(self,matchID,teamNumber,location,time,day,opposition):
+        self.matchID = self.getMatchID()
+        self.teamNumber = self.getTeamNumber()
+        self.location = self.getLocation()
+        self.time = self.getTime()
+        self.day = self.getDay()
+        self.opposition = self.getOpposition()
+
+    def getMatchID(self):
+        self.matchID = sum(1 for line in open("matchFile.txt")) + 1
+        self.matchID = "{:05d}".format(self.matchID)
+        self.matchID = str(self.matchID)
+        return self.matchID
+
+    def getTeamNumber(self):
+        self.teamNumber = raw_input("What team is playing in the match?")
+        self.teamNumber = "{:03d}".format(int(self.teamNumber))
+        self.teamNumber = str(self.teamNumber)
+        return self.teamNumber
+
+    def getLocation(self):
+        self.location = raw_input("Where is the match being played ?")
+        if len(self.location) > 30 :
+            self.getLocation()
+        self.location = "{:<30}".format(self.location)
+        self.location.lower()
+        return self.location
+
+    def getTime(self):
+        self.time = raw_input("What time is the match being played")
+        return self.time
+
+    def getDay(self):
+        self.day = raw_input("What day is the match ? ")
+        return self.day
+
+    def getOpposition(self):
+        self.opposition = raw_input("Who is playing against ?")
+        if len(self.opposition) > 30 :
+            self.getOpposition()
+        self.opposition = "{:<30}".format(self.opposition).lower()
+        return self.opposition
+
+    def getMatchData(self):
+        matchData = self.matchID + self.teamNumber + self.location + self.time + self.day + self.opposition
+        return matchData
+
+class avilablity():
+
+    def sendAvilabilityCheck(self,location,time,day,opposition,teamNumber,email):
+            msg = MIMEMultipart()
+            body = "Are you avialable to play for Whitchurch "+teamNumber+ "'s ? \nDate: "+ day + "\nTime: " +time + "Location: " + Location
+            msg['Subject'] = "Whitchurch Hockey club availablity"
+            msg.attach(MIMEText(body, 'plain'))
+            text = msg.as_string()
+            server = smtplib.SMTP('smtp.gmail.com', 587)
+            server.starttls()
+            server.login("ComputerScienceTest1@gmail.com", "Password1@")
+            server.sendmail("ComputerScienceTest1@gmail.com", email, text)
+            server.quit()
+
+    def getWeeksMatches(self):
+        File = open("matchFile.txt",'r')
+        searchlines = File.readlines()
+        nextWeek = self.getNextWeek()
+        matchs = []
+        for i, line in enumerate(searchlines):
+            for j in nextWeek:
+                if line[43:53] == j:
+                    print(line)
+
+                    matchs.append(line)
+        return matchs
+
+
+
+    def getNextWeek(self):
+        i = datetime.datetime.now()
+        today = "%s" % (i)
+        today = today[8:10] +"/"+ today[5:7]+"/" +today[0:4]
+        nextWeek=[]
+        for j in range(7):
+            nextWeek.append(today)
+            today = today[0]+str(int(today[1])  +1 )+today[2:]
+
+        return nextWeek
+
+    def emailList(self):
+        matchList = self.getWeeksMatches()
+        for i in matchList:
+            teamNumber = i[7:8]
+            File = open("team"+teamNumber+".txt",'r')
+            searchlines = File.readlines()
+            for j, line in enumerate(searchlines):
+                email = line[65:95].strip()
+                location = i[8:38].strip()
+                time = i[38:42]
+                day = i[42:52]
+                opposition = i[52:82].strip()
+                self.sendAvilabilityCheck(self,location,time,day,opposition,teamNumber,email)
+
+
+
+
+
+
+
+
+x = avilablity()
+
+##x.addPlayerToTeam()
+##x.addPlayerToTeam()
+##x.addPlayerToTeam()
+x.emailList()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
