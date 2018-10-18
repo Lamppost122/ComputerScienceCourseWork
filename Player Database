@@ -1,0 +1,110 @@
+#-------------------------------------------------------------------------------
+# Name: Player database
+# Purpose:
+#
+# Author:      Connor Hamilton
+#
+# Created:     31/08/2018
+# Copyright:   (c) Connor Hamilton 2018
+# Licence:     <your licence>
+#-------------------------------------------------------------------------------
+import re
+from datetime import *
+import io
+import sys
+
+
+
+class player:
+    def __init__(self,firstName,lastName,Email,phoneNumber,Address,Postcode,dateOfBirth,dateOfJoining):
+        self.firstName = self.getFirstName()
+        self.lastName = self.getLastName()
+        self.Email = self.getEmail()
+        self.phoneNumber = self.getPhoneNumber()
+        self.Address = self.getAddress()
+        self.Postcode = self.getPostcode()
+        self.dateOfBirth = self.getDateOfBirth()
+        self.dateOfJoining = self.getDateOfJoining()
+
+
+    def getFirstName(self):
+        self.firstName = raw_input("Players first name: ")
+        if len(self.firstName) > 30 :
+            self.getFirstName()
+        self.firstName.ljust(30)
+        self.firstName.lower()
+        return self.firstName
+
+    def getLastName(self):
+        self.lastName = raw_input("Players last name: ")
+        if len(self.lastName) > 30 :
+            playerDatabase.getLastName()
+        self.lastName.ljust(30)
+        self.lastName.lower()
+        return self.lastName
+
+    def getEmail(self):
+        self.Email = raw_input("Players Email: ")
+        if len(self.Email) > 30:
+            self.getEmail()
+##        if re.match(r"^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$", self.Email) != False:
+##            self.getEmail()
+        self.Email.ljust(30)
+        return self.Email
+
+    def getPhoneNumber(self):
+        self.PhoneNumber = raw_input("Players Phone Number: ")
+##        if len(self.PhoneNumber) != 11:
+##            self.getPhoneNumber()
+##        if self.PhoneNumber.isdigit() == False:
+##            self.getPhoneNumber()
+        return self.PhoneNumber
+
+    def getAddress(self):
+        self.Address = raw_input("Players Address: ")
+        if len(self.Address) > 30:
+            self.getAddress()
+        self.Address.ljust(30)
+        return self.Address
+
+    def getPostcode(self):
+        self.Postcode = raw_input("Players Postcode: ")
+##        if re.match("^(([gG][iI][rR] {0,}0[aA]{2})|((([a-pr-uwyzA-PR-UWYZ][a-hk-yA-HK-Y]?[0-9][0-9]?)|(([a-pr-uwyzA-PR-UWYZ][0-9][a-hjkstuwA-HJKSTUW])|([a-pr-uwyzA-PR-UWYZ][a-hk-yA-HK-Y][0-9][abehmnprv-yABEHMNPRV-Y]))) {0,}[0-9][abd-hjlnp-uw-zABD-HJLNP-UW-Z]{2}))$)",Postcode) == False:
+##            playerDatabase.getPostcode()
+        self.Postcode.ljust(8)
+        return self.Postcode
+
+    def getDateOfBirth(self):
+        self.DateOfBirth = raw_input("Players Date Of Birth: ")
+##        try:
+##            datetime.datetime.strptime(inputDob, '%d/%m/%Y')
+##        except ValueError:
+##            playerDatabase.getDateOfBirth()
+        return self.DateOfBirth
+
+    def getDateOfJoining(self):
+        self.DateOfJoining = str(datetime.now())
+        return self.DateOfJoining
+
+
+    def getPlayerData(self):
+        playerData = self.firstName + self.lastName + self.Email+self.phoneNumber+self.Address+self.Postcode+self.dateOfBirth+self.dateOfJoining
+        return playerData
+
+
+class playerDatabase:
+
+    def init__Database():
+        database = open('playerDatabase.txt','w+')
+        database.close()
+
+    def addPlayer(self):
+        p1 = player("","","","","","","","")
+        database = open('playerDatabase.txt','a')
+        database.write(p1.getPlayerData() + "\n")
+        database.close()
+
+
+x = playerDatabase()
+
+x.addPlayer()
